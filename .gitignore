@@ -58,7 +58,7 @@ target/
 .ipynb_checkpoints/
 .python-version
 
-venv
+venv*
 .venv
 *~
 

@@ -13,7 +13,7 @@ import json
 import os
 import shlex
 import subprocess
-import requests
+import urllib3
 import pandas as pd
 import numpy as np
 from .util import deprecated_option
@@ -252,22 +252,22 @@ def localize_file(path):
         path (str):
             File path or URL of target file.
     '''
-
+    http = urllib3.PoolManager()
     is_url = False
     try:
-        r = requests.get(path)
-        filename = os.path.basename(r.url)
+        r = http.request('GET', path)
+        filename = os.path.basename(path)
         if os.path.splitext(filename)[-1] is not ".pdf":
             pid = os.getpid()
             filename = "{0}.pdf".format(pid)
 
         with open(filename, 'wb') as f:
-            f.write(r.content)
+            f.write(r.data)
 
         is_url = True
         return filename, is_url
 
-    except requests.exceptions.RequestException as e:
+    except urllib3.exceptions.MaxRetryError as e:
         return path, is_url
 
 
