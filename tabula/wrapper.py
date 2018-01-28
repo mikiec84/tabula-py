@@ -252,7 +252,7 @@ def localize_file(path):
         path (str):
             File path or URL of target file.
     '''
-    http = urllib3.PoolManager()
+    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED')
     is_url = False
     try:
         r = http.request('GET', path)
